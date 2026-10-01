@@ -1,0 +1,268 @@
+=============
+Triple term
+=============
+
+:s :p <<( :a :b :c )>> .
+
+---
+
+(document
+  (triple
+    (subject
+      (prefixed_name
+        (namespace)
+        (pn_local)))
+    (property_list
+      (property
+        (predicate
+          (prefixed_name
+            (namespace)
+            (pn_local)))
+        (object_list
+          (triple_term
+            (prefixed_name
+              (namespace)
+              (pn_local))
+            (predicate
+              (prefixed_name
+                (namespace)
+                (pn_local)))
+            (prefixed_name
+              (namespace)
+              (pn_local))))))))
+
+=============
+Nested triple term, literal, no spaces
+=============
+
+:s :p <<(:a :b <<( _:x a "v"@en--ltr )>>)>> .
+
+---
+
+(document
+  (triple
+    (subject
+      (prefixed_name
+        (namespace)
+        (pn_local)))
+    (property_list
+      (property
+        (predicate
+          (prefixed_name
+            (namespace)
+            (pn_local)))
+        (object_list
+          (triple_term
+            (prefixed_name
+              (namespace)
+              (pn_local))
+            (predicate
+              (prefixed_name
+                (namespace)
+                (pn_local)))
+            (triple_term
+              (blank_node_label)
+              (predicate)
+              (rdf_literal
+                (string)
+                (lang_tag)))))))))
+
+=============
+Reified triple as subject, with reifier
+=============
+
+<< :a :b :c ~ :r >> :q 1 .
+
+---
+
+(document
+  (triple
+    (reified_triple
+      (prefixed_name
+        (namespace)
+        (pn_local))
+      (predicate
+        (prefixed_name
+          (namespace)
+          (pn_local)))
+      (prefixed_name
+        (namespace)
+        (pn_local))
+      (reifier
+        (prefixed_name
+          (namespace)
+          (pn_local))))
+    (property_list
+      (property
+        (predicate
+          (prefixed_name
+            (namespace)
+            (pn_local)))
+        (object_list
+          (integer))))))
+
+=============
+Reified triple alone
+=============
+
+<< _:a :b << :c :d :e >> >> .
+
+---
+
+(document
+  (triple
+    (reified_triple
+      (blank_node_label)
+      (predicate
+        (prefixed_name
+          (namespace)
+          (pn_local)))
+      (reified_triple
+        (prefixed_name
+          (namespace)
+          (pn_local))
+        (predicate
+          (prefixed_name
+            (namespace)
+            (pn_local)))
+        (prefixed_name
+          (namespace)
+          (pn_local))))))
+
+=============
+Annotation and reifiers
+=============
+
+:a :b :c ~ :r1 {| :source :wiki |} ~ {| :date "2020" |}, :d .
+
+---
+
+(document
+  (triple
+    (subject
+      (prefixed_name
+        (namespace)
+        (pn_local)))
+    (property_list
+      (property
+        (predicate
+          (prefixed_name
+            (namespace)
+            (pn_local)))
+        (object_list
+          (prefixed_name
+            (namespace)
+            (pn_local))
+          (reifier
+            (prefixed_name
+              (namespace)
+              (pn_local)))
+          (annotation
+            (property_list
+              (property
+                (predicate
+                  (prefixed_name
+                    (namespace)
+                    (pn_local)))
+                (object_list
+                  (prefixed_name
+                    (namespace)
+                    (pn_local))))))
+          (reifier)
+          (annotation
+            (property_list
+              (property
+                (predicate
+                  (prefixed_name
+                    (namespace)
+                    (pn_local)))
+                (object_list
+                  (rdf_literal
+                    (string))))))
+          (prefixed_name
+            (namespace)
+            (pn_local)))))))
+
+=============
+Version directives
+=============
+
+VERSION "1.2"
+@version '1.2' .
+:s :p :o .
+
+---
+
+(document
+  (directive
+    (sparql_version
+      (version_specifier)))
+  (directive
+    (version
+      (version_specifier)))
+  (triple
+    (subject
+      (prefixed_name
+        (namespace)
+        (pn_local)))
+    (property_list
+      (property
+        (predicate
+          (prefixed_name
+            (namespace)
+            (pn_local)))
+        (object_list
+          (prefixed_name
+            (namespace)
+            (pn_local)))))))
+
+=============
+TriG graph with RDF 1.2 terms
+=============
+
+:G { :s :p <<( :a :b :c )>> ~ :r {| :q :z |} }
+
+---
+
+(document
+  (graph
+    (prefixed_name
+      (namespace)
+      (pn_local))
+    (subject
+      (prefixed_name
+        (namespace)
+        (pn_local)))
+    (property_list
+      (property
+        (predicate
+          (prefixed_name
+            (namespace)
+            (pn_local)))
+        (object_list
+          (triple_term
+            (prefixed_name
+              (namespace)
+              (pn_local))
+            (predicate
+              (prefixed_name
+                (namespace)
+                (pn_local)))
+            (prefixed_name
+              (namespace)
+              (pn_local)))
+          (reifier
+            (prefixed_name
+              (namespace)
+              (pn_local)))
+          (annotation
+            (property_list
+              (property
+                (predicate
+                  (prefixed_name
+                    (namespace)
+                    (pn_local)))
+                (object_list
+                  (prefixed_name
+                    (namespace)
+                    (pn_local)))))))))))

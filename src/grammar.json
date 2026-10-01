@@ -1,4 +1,5 @@
 {
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
   "name": "turtle",
   "word": "pn_prefix",
   "rules": {
@@ -142,11 +143,19 @@
         },
         {
           "type": "SYMBOL",
+          "name": "version"
+        },
+        {
+          "type": "SYMBOL",
           "name": "sparql_prefix"
         },
         {
           "type": "SYMBOL",
           "name": "sparql_base"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sparql_version"
         }
       ]
     },
@@ -185,6 +194,57 @@
         {
           "type": "STRING",
           "value": "."
+        }
+      ]
+    },
+    "version": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "@version"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "version_specifier"
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        }
+      ]
+    },
+    "sparql_version": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PATTERN",
+              "value": "[Vv][Ee][Rr][Ss][Ii][Oo][Nn]"
+            }
+          },
+          "named": false,
+          "value": "VERSION"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "version_specifier"
+        }
+      ]
+    },
+    "version_specifier": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_string_literal_quote"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_string_literal_single_quote"
         }
       ]
     },
@@ -270,6 +330,27 @@
               ]
             }
           ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "reified_triple"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "property_list"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -324,7 +405,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "_object"
+          "name": "_annotated_object"
         },
         {
           "type": "REPEAT",
@@ -337,10 +418,228 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "_object"
+                "name": "_annotated_object"
               }
             ]
           }
+        }
+      ]
+    },
+    "_annotated_object": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_object"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "reifier"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "annotation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "annotation": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "{|"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "property_list"
+        },
+        {
+          "type": "STRING",
+          "value": "|}"
+        }
+      ]
+    },
+    "reifier": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "~"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_iri"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_blank_node"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "reified_triple": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "<<"
+        },
+        {
+          "type": "FIELD",
+          "name": "subject",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_iri"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_blank_node"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "reified_triple"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "predicate",
+          "content": {
+            "type": "SYMBOL",
+            "name": "predicate"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "object",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_iri"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_blank_node"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_literal"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "triple_term"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "reified_triple"
+              }
+            ]
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "reifier"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ">>"
+        }
+      ]
+    },
+    "triple_term": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "<<("
+        },
+        {
+          "type": "FIELD",
+          "name": "subject",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_iri"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_blank_node"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "predicate",
+          "content": {
+            "type": "SYMBOL",
+            "name": "predicate"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "object",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_iri"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_blank_node"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_literal"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "triple_term"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")>>"
         }
       ]
     },
@@ -396,6 +695,14 @@
         {
           "type": "SYMBOL",
           "name": "_literal"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "triple_term"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "reified_triple"
         }
       ]
     },
@@ -1314,6 +1621,36 @@
                 }
               ]
             }
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": "--"
+                  },
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "ltr"
+                      },
+                      {
+                        "type": "STRING",
+                        "value": "rtl"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }
@@ -2290,5 +2627,6 @@
   "precedences": [],
   "externals": [],
   "inline": [],
-  "supertypes": []
+  "supertypes": [],
+  "reserved": {}
 }

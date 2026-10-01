@@ -1,0 +1,1 @@
+{"grammars":[{"name":"turtle","camelcase":"Turtle","scope":"source.turtle","path":".","file-types":["ttl","trig"]}],"metadata":{"version":"0.2.0","license":"MIT","description":"Turtle","links":{"repository":"https://github.com/GordianDziwis/tree-sitter-turtle"}}}
