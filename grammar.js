@@ -1,5 +1,7 @@
 // [X]  See section "6.5 Grammar" in https://www.w3.org/TR/turtle/#sec-grammar-grammar for
 //      corresponding rule x.
+// [R12-X] RDF 1.2 Turtle, https://www.w3.org/TR/rdf12-turtle/#sec-grammar-grammar, rule x:
+//      version directive, triple terms, reified triples, reifiers, annotations, base direction.
 
 // [26]
 const UCHAR = /(\\u[0-9A-Fa-f]{4}|\\U[0-9A-Fa-f]{8})/
@@ -130,11 +132,14 @@ module.exports = grammar({
     triple: $ => seq($._triples, '.'),
 
     // [3]
+    // [R12-3]
     directive: $ => choice(
       $.prefix_id,
       $.base,
+      $.version,
       $.sparql_prefix,
-      $.sparql_base
+      $.sparql_base,
+      $.sparql_version
     ),
 
     // [4]
@@ -150,6 +155,25 @@ module.exports = grammar({
       '@base',
       $.iri_reference,
       '.'
+    ),
+
+    // [R12-7] version ::= '@version' VersionSpecifier '.'
+    version: $ => seq(
+      '@version',
+      $.version_specifier,
+      '.'
+    ),
+
+    // [R12-10] sparqlVersion ::= "VERSION" VersionSpecifier
+    sparql_version: $ => seq(
+      'VERSION'.toCaseInsensitive(),
+      $.version_specifier,
+    ),
+
+    // [R12-11] VersionSpecifier ::= STRING_LITERAL_QUOTE | STRING_LITERAL_SINGLE_QUOTE
+    version_specifier: $ => choice(
+      $._string_literal_quote,
+      $._string_literal_single_quote
     ),
 
     // [5s]
@@ -174,6 +198,11 @@ module.exports = grammar({
       seq(
         $.blank_node_property_list,
         optional($.property_list)
+      ),
+      // [R12-12] reifiedTriple predicateObjectList?
+      seq(
+        $.reified_triple,
+        optional($.property_list)
       )
     ),
 
@@ -192,13 +221,56 @@ module.exports = grammar({
       $.object_list,
     ),
 
-    // [8]
+    // [8] [R12-14] objectList ::= object annotation (',' object annotation)*
+    // The reifiers and annotation blocks of an object follow it in the object_list.
     object_list: $ => seq(
-      $._object,
+      $._annotated_object,
       repeat(seq(
         ',',
-        $._object
+        $._annotated_object
       ))
+    ),
+
+    // [R12-32] annotation ::= (reifier | annotationBlock)*
+    _annotated_object: $ => seq(
+      $._object,
+      repeat(choice($.reifier, $.annotation))
+    ),
+
+    // [R12-33] annotationBlock ::= '{|' predicateObjectList '|}'
+    annotation: $ => seq(
+      '{|',
+      $.property_list,
+      '|}'
+    ),
+
+    // [R12-34] reifier ::= '~' (iri | BlankNode)?
+    reifier: $ => seq(
+      '~',
+      optional(choice($._iri, $._blank_node))
+    ),
+
+    // [R12-26] reifiedTriple ::= '<<' rtSubject verb rtObject reifier? '>>'
+    reified_triple: $ => seq(
+      '<<',
+      // [R12-27] rtSubject ::= iri | BlankNode | reifiedTriple
+      field('subject', choice($._iri, $._blank_node, $.reified_triple)),
+      field('predicate', $.predicate),
+      // [R12-28] rtObject ::= iri | BlankNode | literal | tripleTerm | reifiedTriple
+      field('object', choice($._iri, $._blank_node, $._literal, $.triple_term, $.reified_triple)),
+      optional($.reifier),
+      '>>'
+    ),
+
+    // [R12-29] tripleTerm ::= '<<(' ttSubject verb ttObject ')>>'
+    triple_term: $ => seq(
+      '<<(',
+      // [R12-30] ttSubject ::= iri | BlankNode
+      field('subject', choice($._iri, $._blank_node)),
+      field('predicate', $.predicate),
+      // [R12-31] ttObject ::= iri | BlankNode | literal | tripleTerm
+      field('object', choice($._iri, $._blank_node, $._literal, $.triple_term)),
+      ')>>'
     ),
 
     // [9]
@@ -215,13 +287,15 @@ module.exports = grammar({
       $.collection
     ),
 
-    // [12]
+    // [12] [R12-18]
     _object: $ => choice(
       $._iri,
       $._blank_node,
       $.collection,
       $.blank_node_property_list,
-      $._literal
+      $._literal,
+      $.triple_term,
+      $.reified_triple
     ),
 
     // [13]
@@ -407,11 +481,13 @@ module.exports = grammar({
       ))
     ),
 
-    // [144s]
+    // [144s] [R12-LANG_DIR] LANG_DIR ::= '@' [a-zA-Z]+ ('-' [a-zA-Z0-9]+)* ('--' [a-zA-Z]+)?
+    // The base direction is 'ltr' or 'rtl' (RDF 1.2 Concepts, 3.3), lowercase in the W3C tests.
     lang_tag: _ => token(seq(
       '@',
       /[a-zA-Z]+/,
-      repeat(seq('-', /[a-zA-Z0-9]+/))
+      repeat(seq('-', /[a-zA-Z0-9]+/)),
+      optional(seq('--', choice('ltr', 'rtl')))
     )),
 
     // [159s]

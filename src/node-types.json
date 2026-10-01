@@ -1,5 +1,20 @@
 [
   {
+    "type": "annotation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "property_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "base",
     "named": true,
     "fields": {},
@@ -77,6 +92,14 @@
         {
           "type": "sparql_prefix",
           "named": true
+        },
+        {
+          "type": "sparql_version",
+          "named": true
+        },
+        {
+          "type": "version",
+          "named": true
         }
       ]
     }
@@ -84,6 +107,7 @@
   {
     "type": "document",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -145,6 +169,10 @@
         },
         {
           "type": "property_list",
+          "named": true
+        },
+        {
+          "type": "reified_triple",
           "named": true
         },
         {
@@ -229,6 +257,14 @@
         {
           "type": "rdf_literal",
           "named": true
+        },
+        {
+          "type": "reified_triple",
+          "named": true
+        },
+        {
+          "type": "triple_term",
+          "named": true
         }
       ]
     }
@@ -239,8 +275,12 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
         {
           "type": "anon",
           "named": true
@@ -283,6 +323,18 @@
         },
         {
           "type": "rdf_literal",
+          "named": true
+        },
+        {
+          "type": "reified_triple",
+          "named": true
+        },
+        {
+          "type": "reifier",
+          "named": true
+        },
+        {
+          "type": "triple_term",
           "named": true
         }
       ]
@@ -424,6 +476,135 @@
     }
   },
   {
+    "type": "reified_triple",
+    "named": true,
+    "fields": {
+      "object": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "anon",
+            "named": true
+          },
+          {
+            "type": "blank_node_label",
+            "named": true
+          },
+          {
+            "type": "boolean_literal",
+            "named": true
+          },
+          {
+            "type": "decimal",
+            "named": true
+          },
+          {
+            "type": "double",
+            "named": true
+          },
+          {
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "iri_reference",
+            "named": true
+          },
+          {
+            "type": "prefixed_name",
+            "named": true
+          },
+          {
+            "type": "rdf_literal",
+            "named": true
+          },
+          {
+            "type": "reified_triple",
+            "named": true
+          },
+          {
+            "type": "triple_term",
+            "named": true
+          }
+        ]
+      },
+      "predicate": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "predicate",
+            "named": true
+          }
+        ]
+      },
+      "subject": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "anon",
+            "named": true
+          },
+          {
+            "type": "blank_node_label",
+            "named": true
+          },
+          {
+            "type": "iri_reference",
+            "named": true
+          },
+          {
+            "type": "prefixed_name",
+            "named": true
+          },
+          {
+            "type": "reified_triple",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "reifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "reifier",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "anon",
+          "named": true
+        },
+        {
+          "type": "blank_node_label",
+          "named": true
+        },
+        {
+          "type": "iri_reference",
+          "named": true
+        },
+        {
+          "type": "prefixed_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "sparql_base",
     "named": true,
     "fields": {},
@@ -452,6 +633,21 @@
         },
         {
           "type": "namespace",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sparql_version",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "version_specifier",
           "named": true
         }
       ]
@@ -520,7 +716,125 @@
           "named": true
         },
         {
+          "type": "reified_triple",
+          "named": true
+        },
+        {
           "type": "subject",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "triple_term",
+    "named": true,
+    "fields": {
+      "object": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "anon",
+            "named": true
+          },
+          {
+            "type": "blank_node_label",
+            "named": true
+          },
+          {
+            "type": "boolean_literal",
+            "named": true
+          },
+          {
+            "type": "decimal",
+            "named": true
+          },
+          {
+            "type": "double",
+            "named": true
+          },
+          {
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "iri_reference",
+            "named": true
+          },
+          {
+            "type": "prefixed_name",
+            "named": true
+          },
+          {
+            "type": "rdf_literal",
+            "named": true
+          },
+          {
+            "type": "triple_term",
+            "named": true
+          }
+        ]
+      },
+      "predicate": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "predicate",
+            "named": true
+          }
+        ]
+      },
+      "subject": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "anon",
+            "named": true
+          },
+          {
+            "type": "blank_node_label",
+            "named": true
+          },
+          {
+            "type": "iri_reference",
+            "named": true
+          },
+          {
+            "type": "prefixed_name",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "version",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "version_specifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "version_specifier",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "echar",
           "named": true
         }
       ]
@@ -563,6 +877,10 @@
     "named": false
   },
   {
+    "type": ")>>",
+    "named": false
+  },
+  {
     "type": ",",
     "named": false
   },
@@ -583,7 +901,19 @@
     "named": false
   },
   {
+    "type": "<<",
+    "named": false
+  },
+  {
+    "type": "<<(",
+    "named": false
+  },
+  {
     "type": ">",
+    "named": false
+  },
+  {
+    "type": ">>",
     "named": false
   },
   {
@@ -592,6 +922,10 @@
   },
   {
     "type": "@prefix",
+    "named": false
+  },
+  {
+    "type": "@version",
     "named": false
   },
   {
@@ -604,6 +938,10 @@
   },
   {
     "type": "PREFIX",
+    "named": false
+  },
+  {
+    "type": "VERSION",
     "named": false
   },
   {
@@ -632,7 +970,8 @@
   },
   {
     "type": "comment",
-    "named": true
+    "named": true,
+    "extra": true
   },
   {
     "type": "decimal",
@@ -675,7 +1014,19 @@
     "named": false
   },
   {
+    "type": "{|",
+    "named": false
+  },
+  {
+    "type": "|}",
+    "named": false
+  },
+  {
     "type": "}",
+    "named": false
+  },
+  {
+    "type": "~",
     "named": false
   }
 ]
